@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">App_Recruitment_Assignment</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="address">Address</string>
+    <string name="university">University</string>
+    <string name="graduation_year">Graduation Year (2015-2020)</string>
+    <string name="cgpa">CGPA</string>
+    <string name="reference_name">Reference Name</string>
+    <string name="submit">Submit</string>
+</resources>
