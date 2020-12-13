@@ -5,49 +5,36 @@ import android.text.Spanned;
 
 import java.util.function.Function;
 
-public class MinMaxFilter implements InputFilter {
+public class MinMaxFilterFloat implements InputFilter {
 
-    private int min, max;
+    float min,max;
     Function<String,Void> callback;
 
-
-
-
-
-    public MinMaxFilter(String min, String max, Function<String,Void> callback) {
-
-            this.min=Integer.parseInt(min);
-            this.max= Integer.parseInt(max);
-            this.callback=callback;
-
+    public MinMaxFilterFloat(float min, float max, Function<String,Void> callback) {
+        this.min = min;
+        this.max = max;
+        this.callback=callback;
     }
-
 
 
     @Override
     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-
         try {
             String inputString = dest.toString() + source.toString();
-            int input = Integer.parseInt(inputString);
-            if (inputString.length()<Integer.toString(min).length() || isInRange(min,max,input)){
+            float input = Float.parseFloat(inputString);
+            if (inputString.length()<Float.toString(min).length() || isInRange(min,max,input)){
                 return null;
             }
         }catch (NumberFormatException e){}
 
         callback.apply("Not in range");
-             return "";
+        return "";
 
     }
 
+    private boolean isInRange(float min, float max, float input) {
 
-
-
-    private boolean isInRange(int min, int max, int input) {
         return max > min && input >=min && input<=max ;
     }
-
-
-
 
 }
