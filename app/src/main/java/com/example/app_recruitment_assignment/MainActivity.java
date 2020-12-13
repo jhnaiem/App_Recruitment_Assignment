@@ -8,13 +8,17 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
+import android.provider.OpenableColumns;
 import android.text.InputFilter;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity  {
 
     EditText mName,mEmail,mPhone,mAddress,mUniversity, mGraduation,mCGPA,mExperience,mCurWork,mExpSalaray,mReference,mGitUrl;
     TextView mCVfile;
+    Button mSubmit;
 
     Spinner mSpn_Department;
 
@@ -60,6 +65,7 @@ public class MainActivity extends AppCompatActivity  {
 
         mCVfile=findViewById(R.id.cvFile);
 
+        mSubmit=findViewById(R.id.btn_submit);
 
 
         mSpn_Department.setPrompt("Select Applying Department");
@@ -74,19 +80,20 @@ public class MainActivity extends AppCompatActivity  {
         mSpn_Department.setAdapter(dataAdapter);
 
 
-        mSpn_Department.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        final String selectedDepartment=mSpn_Department.getSelectedItem().toString();
 
-
-            }
-
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+//        mSpn_Department.setOnItemSelectedListener(new OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//
+//            }
+//
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
 
         mGraduation.setFilters(new  InputFilter[]{new MinMaxFilter("2015", "2020", new Function<String, Void>() {
             @Override
@@ -161,10 +168,34 @@ public class MainActivity extends AppCompatActivity  {
                 @Override
                 public void onActivityResult(Uri uri) {
                     // Handle the returned Uri
+                    mCVfile.setText(getFileName(uri));
+
                 }
             });
 
 
+    //Method to get the name of the CV file
+    public String getFileName(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
+    }
 
 
 
