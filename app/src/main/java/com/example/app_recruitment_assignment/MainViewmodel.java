@@ -24,10 +24,6 @@ public class MainViewmodel extends ViewModel {
             validationMessageLiveData.setValue("Phone number is required");
         }else if (graduation.isEmpty()){
             validationMessageLiveData.setValue("Graduation year is required");
-        }else if(cgpa.isEmpty()){
-            validationMessageLiveData.setValue("CGPA  is required");
-        }else if(experience.isEmpty()){
-            validationMessageLiveData.setValue("Experience number is required");
         }
 
 
