@@ -1,15 +1,23 @@
 package com.example.app_recruitment_assignment;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
@@ -22,11 +30,13 @@ public class MainActivity extends AppCompatActivity  {
 
 
     EditText mName,mEmail,mPhone,mAddress,mUniversity, mGraduation,mCGPA,mExperience,mCurWork,mExpSalaray,mReference,mGitUrl;
+    TextView mCVfile;
 
     Spinner mSpn_Department;
 
     MainViewmodel viewmodel;
 
+    private int check;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +58,9 @@ public class MainActivity extends AppCompatActivity  {
         mReference=findViewById(R.id.et_reference);
         mGitUrl=findViewById(R.id.et_gitUrl);
 
+        mCVfile=findViewById(R.id.cvFile);
 
-        mGraduation=findViewById(R.id.et_graduation);
+
 
         mSpn_Department.setPrompt("Select Applying Department");
         List<String> departments= new ArrayList<String>();
@@ -66,6 +77,7 @@ public class MainActivity extends AppCompatActivity  {
         mSpn_Department.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
 
             }
 
@@ -84,7 +96,73 @@ public class MainActivity extends AppCompatActivity  {
             }
         })});
 
+
+
+        mCGPA.setFilters(new InputFilter[]{new MinMaxFilterFloat(2.0f, 4.0f, new Function<String, Void>() {
+            @Override
+            public Void apply(String s) {
+                Toast.makeText(MainActivity.this,s,Toast.LENGTH_LONG).show();
+                return null;
+            }
+        })});
+
+        mExperience.setFilters(new InputFilter[]{new MinMaxFilter("100", "0", new Function<String, Void>() {
+            @Override
+            public Void apply(String s) {
+                Toast.makeText(MainActivity.this,s,Toast.LENGTH_LONG).show();
+                return null;
+            }
+        })});
+
+//        mExpSalaray.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (!hasFocus){
+//                    check = Integer.parseInt(mExpSalaray.getText().toString());
+//                    if (15000<= check && check <=60000){
+//
+//                    }else{
+//                        Toast.makeText(MainActivity.this,"Not in range",Toast.LENGTH_LONG).show();
+//
+//                    }
+//
+//
+//                }
+//
+//            }
+//
+//        });
+
+
+        mExpSalaray.setFilters(new InputFilter[]{new MinMaxFilter("15000", "60000", new Function<String, Void>() {
+            @Override
+            public Void apply(String s) {
+                Toast.makeText(MainActivity.this,s,Toast.LENGTH_LONG).show();
+                return null;
+            }
+        })});
+
+
+
+        mCVfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mGetContent.launch("application/pdf");
+            }
+        });
+
+
     }
+
+
+
+    ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
+            new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri uri) {
+                    // Handle the returned Uri
+                }
+            });
 
 
 
