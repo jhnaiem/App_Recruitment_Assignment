@@ -125,6 +125,28 @@
             android:maxLength="256"
             android:inputType="textUri"/>
 
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/upload_your_cv"
+            android:layout_marginLeft="5dp"
+            android:textSize="15dp"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:id="@+id/cvFile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:textSize="15dp"
+            android:background="@drawable/shape"
+            android:textStyle="bold"
+            android:textColor="#020202"
+            android:hint="Choose file"
+            android:maxLength="256"
+            />
+
         <Button
             android:id="@+id/btn_button"
             android:layout_width="wrap_content"
