@@ -155,8 +155,17 @@
             android:layout_gravity="center"
             android:text="@string/submit"/>
 
-
-
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:max="100"
+            android:progress="0"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone" />
 
 
 
