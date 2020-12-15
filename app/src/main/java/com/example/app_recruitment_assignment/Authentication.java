@@ -1,7 +1,5 @@
 package com.example.app_recruitment_assignment;
 
-import com.google.gson.Gson;
-
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,7 +8,6 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Credentials;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -23,10 +20,11 @@ public class Authentication {
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static String url="https://recruitment.fisdev.com/api/login/";
 
+    public OkHttpClient client = new OkHttpClient();
 
-    public void fetchResponse(LoginCallback loginCallback) throws Exception {
+    public void fetchResponse(ServerResponseLisenter serverResponseLisenter) throws Exception {
 
-        OkHttpClient client = new OkHttpClient();
+
 
 
         String postbody= "{\n" +
@@ -48,7 +46,7 @@ public class Authentication {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
 
-                loginCallback.onLoginFailure("Authentication failed");
+                serverResponseLisenter.onFailure("Authentication failed");
 
 
             }
@@ -60,9 +58,9 @@ public class Authentication {
                 try {
                     JSONObject bodyJson= new JSONObject(response.body().string());
 
-                    loginCallback.onLoginSuccess(bodyJson.getString("token"));
+                    serverResponseLisenter.onSuccess(bodyJson.getString("token"));
                 } catch (JSONException e) {
-                    loginCallback.onLoginFailure("Data parsing error");
+                    serverResponseLisenter.onFailure("Data parsing error");
                     e.printStackTrace();
                 }
 
