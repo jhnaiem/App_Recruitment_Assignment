@@ -1,21 +1,37 @@
 package com.example.app_recruitment_assignment;
 
 import android.util.Log;
-import android.widget.EditText;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.UUID;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class MainViewmodel extends ViewModel {
 
+    private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     String token;
+    Authentication authentication = new Authentication();
+
 
     MutableLiveData<String> validationMessageLiveData = new MutableLiveData<>();
 
-    public void onSubmitClick(String name, String email, String phone, String address, String university, String graduation, String cgpa, String experience, String curWorkplace, String selectedDepartment, String expSalary, String reference, String gitUrl, String cvfile) {
+    public void onSubmitClick(String name, String email, String phone, String address, String university, String graduation, String cgpa, String experience, String curWorkplace, String selectedDepartment, String expSalary, String reference, String gitUrl, String cvfile, ServerResponseLisenter serverResponseLisenter) {
 
         if (name.isEmpty()) {
             validationMessageLiveData.setValue("Name is required");
@@ -45,40 +61,80 @@ public class MainViewmodel extends ViewModel {
             validationMessageLiveData.setValue("CV file  is required");
         } else {
 
+            String idCV = UUID.randomUUID().toString();
+            JsonObject cv_fileJSON = new JsonObject();
+            cv_fileJSON.addProperty("tsync_id", idCV);
+
+            Applicant applicant = new Applicant(UUID.randomUUID().toString(), name, email, phone, address, university, Integer.parseInt(graduation), Float.parseFloat(cgpa), Integer.parseInt(experience), curWorkplace, selectedDepartment, Long.parseLong(expSalary), reference, gitUrl, cv_fileJSON, System.currentTimeMillis(), System.currentTimeMillis());
+
+            String postURL = "https://recruitment.fisdev.com/api/v0/recruiting-entities/";
+            Gson gson = new Gson();
+
+            String json = gson.toJson(applicant);
+
+            RequestBody body = RequestBody.create(JSON, json);
+
+            Log.d("Json", json);
+            Request request = new Request.Builder()
+                    .url(postURL)
+                    .header("Authorization", "Token " + token)
+                    .post(body).build();
+
+
+            authentication.client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+                    try {
+                        JSONObject bodyJson = new JSONObject(response.body().string());
+                        serverResponseLisenter.onFailure(bodyJson.getString("message"));
+                        //validationMessageLiveData.setValue(bodyJson.getString("message"));
+                        JSONObject cvObject = bodyJson.getJSONObject("cv_file");
+                        String fileTokenId = cvObject.getString("id");
 
 
 
+                        Log.d("Message", bodyJson.getString("message"));
+                        Log.d("===>", "Success:" + fileTokenId);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
 
-
+                }
+            });
         }
 
 
     }
 
 
-
     public void fetchToken() {
-        Authentication authentication = new Authentication();
 
-        LoginCallback loginCallback = new LoginCallback() {
+        ServerResponseLisenter serverResponseLisenter = new ServerResponseLisenter() {
             @Override
-            public void onLoginSuccess(String token) {
+            public void onSuccess(String token) {
 
-                MainViewmodel.this.token=token;
+                MainViewmodel.this.token = token;
                 Log.d("===>", " success: " + token);
 
             }
 
             @Override
-            public void onLoginFailure(String message) {
+            public void onFailure(String message) {
                 Log.d("===>", " failure: " + message);
 
             }
         };
 
         try {
-            authentication.fetchResponse(loginCallback);
+            authentication.fetchResponse(serverResponseLisenter);
         } catch (Exception e) {
             e.printStackTrace();
         }
