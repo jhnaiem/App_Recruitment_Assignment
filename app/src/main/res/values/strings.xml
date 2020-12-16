@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">App_Recruitment_Assignment</string>
+    <string name="app_name">Recruiting App</string>
     <string name="name">Name</string>
     <string name="email">Email</string>
     <string name="address">Address</string>
@@ -10,4 +10,5 @@
     <string name="submit">Submit</string>
     <string name="spnPromt">Select Department</string>
     <string name="upload_your_cv">Upload Your CV</string>
+    <string name="internal_storage">Internal storage</string>
 </resources>
