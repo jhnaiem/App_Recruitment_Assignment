@@ -18,28 +18,25 @@ public class Authentication {
 
 
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    private static String url="https://recruitment.fisdev.com/api/login/";
+    private static String url = "https://recruitment.fisdev.com/api/login/";
 
     public OkHttpClient client = new OkHttpClient();
 
     public void fetchResponse(ServerResponseLisenter serverResponseLisenter) throws Exception {
 
 
-
-
-        String postbody= "{\n" +
+        String postbody = "{\n" +
                 "    \"username\": \"jahid.naiem@northsouth.edu\",\n" +
                 "    \"password\": \"p0DbOnz84\"\n" +
                 "}";
 
-       RequestBody body = RequestBody.create(JSON, postbody);
+        RequestBody body = RequestBody.create(JSON, postbody);
         // execute request
         Request request = new Request.Builder()
                 .url(url)
-                .header("Content-Type","application/json")
+                .header("Content-Type", "application/json")
                 .post(body)
                 .build();
-
 
 
         client.newCall(request).enqueue(new Callback() {
@@ -56,7 +53,7 @@ public class Authentication {
 
 
                 try {
-                    JSONObject bodyJson= new JSONObject(response.body().string());
+                    JSONObject bodyJson = new JSONObject(response.body().string());
 
                     serverResponseLisenter.onSuccess(bodyJson.getString("token"));
                 } catch (JSONException e) {
