@@ -28,6 +28,14 @@
             android:layout_marginRight="8dp"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:textColor="#E40606"
+                android:text="* required field"
+                android:textSize="15dp" />
 
             <EditText
                 android:id="@+id/et_name"
@@ -52,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:hint="Phone "
+                android:hint="@string/phone"
                 android:inputType="phone"
                 android:maxLength="14" />
 
@@ -113,7 +121,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
-                android:hint="Expected Salaray"
+                android:hint="@string/expected_salaray"
                 android:inputType="number" />
 
             <EditText
@@ -130,7 +138,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:hint="Github URL"
+                android:hint="@string/github_url_of_the_project"
                 android:inputType="textUri"
                 android:maxLength="256" />
 
@@ -139,7 +147,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:text="Select applying department"
+                android:text="@string/select_applying_department"
                 android:textSize="15dp" />
 
             <Spinner

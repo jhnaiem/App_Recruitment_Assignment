@@ -1,14 +1,18 @@
 <resources>
     <string name="app_name">Recruiting App</string>
-    <string name="name">Name</string>
-    <string name="email">Email</string>
+    <string name="name">Name *</string>
+    <string name="email">Email *</string>
     <string name="address">Address</string>
-    <string name="university">University</string>
-    <string name="graduation_year">Graduation Year (2015-2020)</string>
-    <string name="cgpa">CGPA</string>
+    <string name="university">University *</string>
+    <string name="graduation_year">Graduation Year (2015-2020) *</string>
+    <string name="cgpa">CGPA(2.0-4.0)</string>
     <string name="reference_name">Reference Name</string>
     <string name="submit">Submit</string>
     <string name="spnPromt">Select Department</string>
-    <string name="upload_your_cv">Upload Your CV</string>
+    <string name="upload_your_cv">Upload Your CV *</string>
     <string name="internal_storage">Internal storage</string>
+    <string name="github_url_of_the_project">Github URL of the project *</string>
+    <string name="select_applying_department">Select applying department *</string>
+    <string name="expected_salaray">Expected Salaray *</string>
+    <string name="phone">Phone *</string>
 </resources>
