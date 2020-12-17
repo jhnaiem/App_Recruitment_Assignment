@@ -29,6 +29,7 @@ public class MainViewmodel extends ViewModel {
     Authentication authentication = new Authentication();
 
 
+    Applicant applicant;
     MutableLiveData<String> validationMessageLiveData = new MutableLiveData<>();
 
     public void onSubmitClick(String name, String email, String phone, String address, String university, String graduation, String cgpa, String experience, String curWorkplace, String selectedDepartment, String expSalary, String reference, String gitUrl, String cvfile, ServerResponseLisenter serverResponseLisenter) {
@@ -65,9 +66,30 @@ public class MainViewmodel extends ViewModel {
             JsonObject cv_fileJSON = new JsonObject();
             cv_fileJSON.addProperty("tsync_id", idCV);
 
-            Applicant applicant = new Applicant(UUID.randomUUID().toString(), name, email, phone, address, university, Integer.parseInt(graduation), Float.parseFloat(cgpa), Integer.parseInt(experience), curWorkplace, selectedDepartment, Long.parseLong(expSalary), reference, gitUrl, cv_fileJSON, System.currentTimeMillis(), System.currentTimeMillis());
+            if (applicant == null) {
+                applicant = new Applicant(UUID.randomUUID().toString(), name, email, phone, address, university, Integer.parseInt(graduation), Float.parseFloat(cgpa), Integer.parseInt(experience), curWorkplace, selectedDepartment, Long.parseLong(expSalary), reference, gitUrl, cv_fileJSON, System.currentTimeMillis());
+            } else {
+                //When a user wants to update input
+                applicant.setName(name);
+                applicant.setEmail(email);
+                applicant.setPhone(phone);
+                applicant.setFull_address(address);
+                applicant.setName_of_university(university);
+                applicant.setGraduation_year(Integer.parseInt(graduation));
+                applicant.setCgpa(Float.parseFloat(cgpa));
+                applicant.setExperience_in_months(Integer.parseInt(experience));
+                applicant.setCurrrent_work_place_name(curWorkplace);
+                applicant.setApplying_in(selectedDepartment);
+                applicant.setExpected_salary(Long.parseLong(expSalary));
+                applicant.setField_buzz_reference(reference);
+                applicant.setGithub_project_url(gitUrl);
+                applicant.setCv_file(cv_fileJSON);
+                applicant.setOn_spot_update_time(System.currentTimeMillis());
 
-            String postURL = "https://recruitment.fisdev.com/api/v0/recruiting-entities/";
+
+            }
+
+            String postURL = "https://recruitment.fisdev.com/api/v1/recruiting-entities/";
             Gson gson = new Gson();
 
             String json = gson.toJson(applicant);
@@ -92,11 +114,14 @@ public class MainViewmodel extends ViewModel {
 
                     try {
                         JSONObject bodyJson = new JSONObject(response.body().string());
-                        serverResponseLisenter.onFailure(bodyJson.getString("message"));
-                        //validationMessageLiveData.setValue(bodyJson.getString("message"));
+
+                        // Get the (cv_file) json from the response
                         JSONObject cvObject = bodyJson.getJSONObject("cv_file");
                         String fileTokenId = cvObject.getString("id");
 
+                        //Pass the token
+                        serverResponseLisenter.onSuccess(fileTokenId);
+                        serverResponseLisenter.onFailure(bodyJson.getString("message"));
 
 
                         Log.d("Message", bodyJson.getString("message"));
