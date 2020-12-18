@@ -25,8 +25,17 @@ import okhttp3.Response;
 public class MainViewmodel extends ViewModel {
 
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    String token;
+
+    private String mtoken;
     Authentication authentication = new Authentication();
+
+    public void setToken(String token) {
+        this.mtoken = token;
+    }
+
+    public String getMtoken() {
+        return mtoken;
+    }
 
 
     Applicant applicant;
@@ -89,7 +98,7 @@ public class MainViewmodel extends ViewModel {
 
             }
 
-            String postURL = "https://recruitment.fisdev.com/api/v1/recruiting-entities/";
+            String postURL = "https://recruitment.fisdev.com/api/v1/recruitingentities/";
             Gson gson = new Gson();
 
             String json = gson.toJson(applicant);
@@ -99,7 +108,7 @@ public class MainViewmodel extends ViewModel {
             Log.d("Json", json);
             Request request = new Request.Builder()
                     .url(postURL)
-                    .header("Authorization", "Token " + token)
+                    .header("Authorization", "Token " + mtoken)
                     .post(body).build();
 
 
@@ -146,7 +155,8 @@ public class MainViewmodel extends ViewModel {
             @Override
             public void onSuccess(String token) {
 
-                MainViewmodel.this.token = token;
+                // Set token to use it later in mainactivity for api 3.3 and for api 3.2
+                setToken(token);
                 Log.d("===>", " success: " + token);
 
             }
@@ -163,6 +173,7 @@ public class MainViewmodel extends ViewModel {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        ;
     }
 
 

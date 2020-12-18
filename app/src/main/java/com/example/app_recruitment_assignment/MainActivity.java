@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Permissions that need to be explicitly requested from end user.
      */
-    private static final String[] REQUIRED_SDK_PERMISSIONS = new String[] {Manifest.permission.READ_EXTERNAL_STORAGE };
+    private static final String[] REQUIRED_SDK_PERMISSIONS = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
 
 
     EditText mName, mEmail, mPhone, mAddress, mUniversity, mGraduation, mCGPA, mExperience, mCurWork, mExpSalaray, mReference, mGitUrl;
@@ -73,8 +73,9 @@ public class MainActivity extends AppCompatActivity {
     MainViewmodel viewmodel;
 
     Authentication authentication = new Authentication();
-    private int check;
     private Uri uri;
+
+    private String tokenAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,18 +118,6 @@ public class MainActivity extends AppCompatActivity {
 
         final String selectedDepartment = mSpn_Department.getSelectedItem().toString();
 
-//        mSpn_Department.setOnItemSelectedListener(new OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//
-//            }
-//
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
 
         mGraduation.setFilters(new InputFilter[]{new MinMaxFilter("2015", "2020", new Function<String, Void>() {
             @Override
@@ -229,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
         });
 
+        //Calling the function for Authentication and get the Auth token
         viewmodel.fetchToken();
 
 
@@ -246,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.d("File", "File not found");
         }
-        String fileName = FileUtils.getFileName(MainActivity.this,uri);
+        String fileName = FileUtils.getFileName(MainActivity.this, uri);
 
 
         MediaType mediaType = MediaType.parse("application/octet-stream");
@@ -258,9 +248,12 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
 
+       // Get the Auth token from MainViewmodel
+        String tokenAuth = viewmodel.getMtoken();
+
         Request request = new Request.Builder()
                 .url(putURL)
-                .addHeader("Authorization", "Token 2fed6f4b42427ac1d5a04af7f29c18285518a4c0")
+                .addHeader("Authorization", "Token " + tokenAuth)
                 .addHeader("Cookie", "multidb_pin_writes=y")
                 .put(requestBody)
                 .build();
@@ -306,12 +299,11 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity.this.uri = uri;
                     // Handle the returned Uri
                     //Calling the Method to get file name from URI and then set it on textview
-                    mCVfile.setText(FileUtils.getFileName(MainActivity.this,uri));
+                    mCVfile.setText(FileUtils.getFileName(MainActivity.this, uri));
 
 
                 }
             });
-
 
 
     /**
@@ -358,7 +350,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
-
 
 
 }
