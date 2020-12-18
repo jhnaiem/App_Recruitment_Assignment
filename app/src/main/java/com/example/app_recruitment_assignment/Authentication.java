@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -20,7 +21,11 @@ public class Authentication {
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static String url = "https://recruitment.fisdev.com/api/login/";
 
-    public OkHttpClient client = new OkHttpClient();
+    public OkHttpClient client = new OkHttpClient.Builder()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .build();
 
     public void fetchResponse(ServerResponseLisenter serverResponseLisenter) throws Exception {
 

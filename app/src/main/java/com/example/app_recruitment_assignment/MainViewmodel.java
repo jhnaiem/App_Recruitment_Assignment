@@ -98,7 +98,7 @@ public class MainViewmodel extends ViewModel {
 
             }
 
-            String postURL = "https://recruitment.fisdev.com/api/v1/recruitingentities/";
+            String postURL = "https://recruitment.fisdev.com/api/v1/recruiting-entities/";
             Gson gson = new Gson();
 
             String json = gson.toJson(applicant);
